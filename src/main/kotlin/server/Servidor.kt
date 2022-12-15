@@ -17,7 +17,7 @@ R2D2 crea una seccion critica llamada StarUnix, y se pueden enviar tres tipos de
 
 Nave: Id, tipo de Nave(X-WIND, T-FIGHTER), salto de hiper espacio (boolean), misiles protonicos (entre 10..20), fecha creacion
 
--- Aplicacion de certificados y SecureSocket (usando .jks)
+-- Aplicacion de certificados y SSLServerSocket (usando .jks)
 
 Lo unico que ha cambiado respecto al proyecto original son las clases:
     - Servidor
