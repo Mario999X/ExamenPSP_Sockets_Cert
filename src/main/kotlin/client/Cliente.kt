@@ -111,8 +111,8 @@ private fun prepararConexion() {
     val fichero = Paths.get(workingDir + File.separator + "certClient" + File.separator + "truststore.jks").toString()
 
     // Para depurar y ver el dialogo y handshake
-    System.setProperty("javax.net.debug", "ssl, keymanager, handshake");
+    System.setProperty("javax.net.debug", "ssl, keymanager, handshake")
 
-    System.setProperty("javax.net.ssl.trustStore", fichero);
-    System.setProperty("javax.net.ssl.trustStorePassword", "654321");
+    System.setProperty("javax.net.ssl.trustStore", fichero)
+    System.setProperty("javax.net.ssl.trustStorePassword", "654321")
 }
