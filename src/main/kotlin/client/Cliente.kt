@@ -16,15 +16,16 @@ import javax.net.ssl.SSLSocketFactory
 
 private val json = Json
 
+// Informacion del cliente y la conexion a realizar
+private lateinit var direccion: InetAddress
+private lateinit var clienteFactory: SSLSocketFactory
+private lateinit var servidor: SSLSocket
+private const val PUERTO = 6969
+
+// Preparamos el request antes para enviarlo segun la opcion que escogamos
 private lateinit var request: Request<Nave>
 
 fun main() {
-    // Informacion del cliente y la conexion a realizar
-    var direccion: InetAddress
-    var clienteFactory: SSLSocketFactory
-    var servidor: SSLSocket
-    val puerto = 6969
-
     var salida = false
 
     // Si queremos que el cliente se desconecte de la app cuando quiera
@@ -77,13 +78,8 @@ fun main() {
             if (opcion == null || opcion <= 0 || opcion >= 4) {
                 println("---")
             } else {
-                // Conectamos con el servidor, y segun la opcion seleccionada, le enviamos un aviso (un Int por ejemplo)
+                // Conectamos con el servidor
                 prepararConexion()
-
-                direccion = InetAddress.getLocalHost()
-                clienteFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
-                servidor = clienteFactory.createSocket(direccion, puerto) as SSLSocket
-
                 // Canales de entrada-salida
                 val sendRequest = DataOutputStream(servidor.outputStream)
                 val receiveResponse = DataInputStream(servidor.inputStream)
@@ -115,4 +111,8 @@ private fun prepararConexion() {
 
     System.setProperty("javax.net.ssl.trustStore", fichero)
     System.setProperty("javax.net.ssl.trustStorePassword", "654321")
+
+    direccion = InetAddress.getLocalHost()
+    clienteFactory = SSLSocketFactory.getDefault() as SSLSocketFactory
+    servidor = clienteFactory.createSocket(direccion, PUERTO) as SSLSocket
 }

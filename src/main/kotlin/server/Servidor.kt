@@ -61,8 +61,6 @@ fun main() {
     println("Iniciando servidor...")
 
     prepararConexion()
-    serverFactory = SSLServerSocketFactory.getDefault() as SSLServerSocketFactory
-    s = serverFactory.createServerSocket(PUERTO) as SSLServerSocket
 
     while (true) {
         println("Servidor esperando...")
@@ -84,4 +82,7 @@ private fun prepararConexion() {
     val fichero = Paths.get(workingDir + File.separator + "cert" + File.separator + "llaveropsp.jks").toString()
     System.setProperty("javax.net.ssl.keyStore", fichero)
     System.setProperty("javax.net.ssl.keyStorePassword", "123456")
+
+    serverFactory = SSLServerSocketFactory.getDefault() as SSLServerSocketFactory
+    s = serverFactory.createServerSocket(PUERTO) as SSLServerSocket
 }
