@@ -13,9 +13,12 @@ class StarUnix {
 
     private val lock = ReentrantLock()
 
-    // Aplico el reentrantLock unicamente en la funcion critica, la de agregacion.
     fun add(item: Nave) {
-        lock.withLock {
+        while (!lock.tryLock()) {
+            Thread.sleep((100L..500L).random())
+        }
+        if (lock.isHeldByCurrentThread) {
+
             contadorId.incrementAndGet()
             item.id = contadorId.toInt()
 
@@ -25,6 +28,7 @@ class StarUnix {
             misiles.addAndGet(item.misilesProtonicos)
             //println("Misiles registrados: $misiles")
         }
+        lock.unlock()
     }
 
     fun getAll(): List<Nave> {
