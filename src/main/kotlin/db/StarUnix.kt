@@ -28,17 +28,23 @@ class StarUnix {
     }
 
     fun getAll(): List<Nave> {
-        println("Obteniendo registro completo")
-        return registros
+        lock.withLock {
+            println("Obteniendo registro completo")
+            return registros
+        }
     }
 
     fun getInfoMisil(): Int {
-        println("Obteniendo misiles")
-        return misiles.toInt()
+        lock.withLock {
+            println("Obteniendo misiles")
+            return misiles.toInt()
+        }
     }
 
     fun getInfoTotalNaves(): Int {
-        println("Obteniendo total de naves")
-        return registros.size
+        lock.withLock {
+            println("Obteniendo total de naves")
+            return registros.size
+        }
     }
 }
