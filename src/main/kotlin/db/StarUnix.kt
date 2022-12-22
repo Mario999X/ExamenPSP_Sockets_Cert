@@ -61,8 +61,8 @@ class StarUnix {
             lector.incrementAndGet()
             println("Obteniendo misiles")
 
-            depositarNaves.signalAll()
             lector.decrementAndGet()
+            depositarNaves.signalAll()
             return misiles.toInt()
         }
     }
@@ -75,8 +75,8 @@ class StarUnix {
             lector.incrementAndGet()
             println("Obteniendo total de naves")
 
-            depositarNaves.signalAll()
             lector.decrementAndGet()
+            depositarNaves.signalAll()
             return registros.size
         }
     }
