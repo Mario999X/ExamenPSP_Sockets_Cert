@@ -47,8 +47,8 @@ class StarUnix {
             lector.incrementAndGet()
             println("Obteniendo registro completo")
 
-            depositarNaves.signalAll()
             lector.decrementAndGet()
+            depositarNaves.signalAll()
             return registros
         }
     }
