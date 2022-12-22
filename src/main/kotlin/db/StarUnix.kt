@@ -2,6 +2,7 @@ package db
 
 import models.Nave
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
@@ -12,12 +13,18 @@ class StarUnix {
     private val contadorId: AtomicInteger = AtomicInteger(0)
 
     private val lock = ReentrantLock()
+    private val obtenerNaves: Condition = lock.newCondition()
+    private val depositarNaves: Condition = lock.newCondition()
+
+    private var escritor = false
+    private var lector = AtomicInteger(0)
 
     fun add(item: Nave) {
-        while (!lock.tryLock()) {
-            Thread.sleep((100L..500L).random())
-        }
-        if (lock.isHeldByCurrentThread) {
+        lock.withLock {
+            while (lector.toInt() > 0) {
+                depositarNaves.await()
+            }
+            escritor = true
 
             contadorId.incrementAndGet()
             item.id = contadorId.toInt()
@@ -26,28 +33,50 @@ class StarUnix {
             registros.add(item)
 
             misiles.addAndGet(item.misilesProtonicos)
-            //println("Misiles registrados: $misiles")
+
+            escritor = false
+            obtenerNaves.signalAll()
         }
-        lock.unlock()
     }
 
     fun getAll(): List<Nave> {
         lock.withLock {
+            while (escritor) {
+                obtenerNaves.await()
+            }
+            lector.incrementAndGet()
             println("Obteniendo registro completo")
+
+            depositarNaves.signalAll()
+            lector.decrementAndGet()
             return registros
         }
     }
 
     fun getInfoMisil(): Int {
         lock.withLock {
+            while (escritor) {
+                obtenerNaves.await()
+            }
+            lector.incrementAndGet()
             println("Obteniendo misiles")
+
+            depositarNaves.signalAll()
+            lector.decrementAndGet()
             return misiles.toInt()
         }
     }
 
     fun getInfoTotalNaves(): Int {
         lock.withLock {
+            while (escritor) {
+                obtenerNaves.await()
+            }
+            lector.incrementAndGet()
             println("Obteniendo total de naves")
+
+            depositarNaves.signalAll()
+            lector.decrementAndGet()
             return registros.size
         }
     }
